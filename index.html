@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/images/favicon-32x32.png"
+    />
+
+    <title>Frontend Mentor | Browser extensions manager UI</title>
+    <link rel="stylesheet" href="style.css" />
+
+  </head>
+  <body>
+    <div class="page-grid">
+      <header>
+        <svg width="179" height="41" class="svg-color">
+          <use href="assets/images/icons.svg#logo"></use>
+        </svg>
+
+        <button class="toggle-lightmode-button" type="button"></button>
+      </header>
+
+      <section class="extensions-list">
+        <h1>Extensions List</h1>
+        <ul class="activity-button-list">
+          <li>
+            <button
+              data-filter-state="all"
+              type="button"
+            >
+              All
+            </button>
+          </li>
+          <li>
+            <button
+              data-filter-state="active"
+              type="button"
+            >
+              Active
+            </button>
+          </li>
+          <li>
+            <button
+              data-filter-state="inactive"
+              type="button"
+            >
+              Inactive
+            </button>
+          </li>
+        </ul>
+      </section>
+
+      <main class="extensions-grid"></main>
+    </div>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
