@@ -1,4 +1,4 @@
-import { originalData } from "../data.js";
+import { originalData } from "./data.js";
 import { render } from "./main.js";
 
 const defaultState = {

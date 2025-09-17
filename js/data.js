@@ -1,4 +1,4 @@
-export const originalData = [
+git export const originalData = [
     {   
         "id": 1,
         "logo": "./assets/images/logo-devlens.svg",
