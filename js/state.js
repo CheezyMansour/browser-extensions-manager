@@ -31,7 +31,8 @@ function loadFromStorage(key) {
 function setState(newState) {
   state = newState;
   saveToStorage("state", state);
-  render();
+  setTimeout(render, 200)
+  // render();
 }
 
 export { state, saveToStorage, setState };

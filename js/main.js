@@ -1,4 +1,4 @@
-import { state, saveToStorage, setState } from "./state.js";
+import { state, setState } from "./state.js";
 import {
   toggleMode,
   toggleExtensions,
@@ -27,6 +27,7 @@ addEventListeners();
 export function render() {
   renderMode();
   renderFilterButtons();
+  // setTimeout(renderGrid, 1000)
   renderGrid();
 }
 
@@ -122,11 +123,9 @@ function handleRemoveButtonEvent(removeButton) {
 
 function handleModeToggleEvent() {
   setState(toggleMode(state));
-  saveToStorage("state", state);
 }
 
 function handleSliderEvent(slider) {
   const id = slider.dataset.id;
   setState(toggleExtensions(state, id));
-  saveToStorage("state", state);
 }
