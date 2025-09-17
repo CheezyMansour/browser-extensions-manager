@@ -127,6 +127,7 @@ header {
   align-items: center;
   justify-content: space-between;
   flex: 3 1 0;
+
 }
 
 /* ==== SMALL COMPONENTS ==== */
@@ -293,3 +294,16 @@ button {
     align-items: center;
   }
 }
+
+.extensions-grid.empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px; /* keeps some space */
+}
+
+.empty-message {
+  text-align: center;
+  font-size: var(--font-lg);
+}
+

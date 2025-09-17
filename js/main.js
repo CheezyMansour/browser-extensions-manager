@@ -1,6 +1,11 @@
-import { state, saveState } from "./state.js";
-
-
+import { state, saveToStorage, setState } from "./state.js";
+import {
+  toggleMode,
+  toggleExtensions,
+  filterCards,
+  removeCards,
+  setFilterState,
+} from "./helper.js";
 
 // DOM ELEMENTS
 const html = document.documentElement;
@@ -13,21 +18,19 @@ const activityButtons = document.querySelectorAll(
   ".activity-button-list button"
 );
 
-
 // INITIALIZE
 render();
 addEventListeners();
 
 //================= RENDER FUNCTIONS
 
-function render() {
+export function render() {
   renderMode();
   renderFilterButtons();
   renderGrid();
 }
 
 function renderMode() {
-  
   state.lightModeOn
     ? html.removeAttribute("data-theme")
     : (html.dataset.theme = "dark");
@@ -44,9 +47,16 @@ function renderFilterButtons() {
 }
 
 function renderGrid() {
-  let finalHTML = "";
+  const filteredCards = filterCards(state);
 
-  filterCards().forEach((card) => {
+  if (filteredCards.length === 0) {
+    extensionsGrid.innerHTML =
+      '<p class="empty-message">No extensions available.</p>';
+    return;
+  }
+
+  let finalHTML = "";
+  filteredCards.forEach((card) => {
     finalHTML += `
       <article class="extensions-card">
           <div class="description">
@@ -71,67 +81,52 @@ function renderGrid() {
       `;
   });
   extensionsGrid.innerHTML = finalHTML;
+
+  if (filteredCards.length === 0) {
+    console.log("filtered cards = 0");
+    return;
+  }
 }
 
-  //============== EVENT LISTENERS
-
+//============== EVENT LISTENERS
 function addEventListeners() {
   toggleLightButton.addEventListener("click", () => {
-    toggleMode();
+    handleModeToggleEvent();
   });
 
   extensionsGrid.addEventListener("click", (e) => {
     const slider = e.target.closest(".slider");
     const removeButton = e.target.closest(".remove-button");
 
-    if (slider) {
-      const id = slider.dataset.id;
-      state.cards = toggleExtensions(id);
-      saveState();
-      render();
-    } 
-    else if (removeButton) {
-      const id = removeButton.dataset.id;
-      state.cards = state.cards.filter((card) => String(card.id) !== id);
-      saveState();
-      render();
-    }
+    if (slider) handleSliderEvent(slider);
+    else if (removeButton) handleRemoveButtonEvent(removeButton);
   });
 
   activityButtonsContainer.addEventListener("click", (e) => {
     const button = e.target.closest("button");
-    if (!button) return;
-
-    state.filterState = button.dataset.filterState;
-    saveState();
-    render();
+    handleFilterButtonEvent(button);
   });
 }
 
- //================== HELPER FUNCTIONS
+// EVENT HANDLERS
 
-function toggleMode() {
-  state.lightModeOn = !state.lightModeOn;
-  saveState();
-  render();
+function handleFilterButtonEvent(button) {
+  if (!button) return;
+  setState(setFilterState(state, button));
 }
 
-function filterCards() {
-  const { filterState, cards } = state;
-  switch (filterState) {
-    case "active":
-      return cards.filter((c) => c.isActive);
-    case "inactive":
-      return cards.filter((c) => !c.isActive);
-    default:
-      return cards;
-  }
+function handleRemoveButtonEvent(removeButton) {
+  const id = removeButton.dataset.id;
+  setState(removeCards(state, id));
 }
 
-function toggleExtensions(id) {
-  return state.cards.map(card => 
-    String(card.id) === id 
-      ? {...card, isActive: !card.isActive}
-      : card
-  );
+function handleModeToggleEvent() {
+  setState(toggleMode(state));
+  saveToStorage("state", state);
+}
+
+function handleSliderEvent(slider) {
+  const id = slider.dataset.id;
+  setState(toggleExtensions(state, id));
+  saveToStorage("state", state);
 }
